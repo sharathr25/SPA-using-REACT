@@ -1,0 +1,43 @@
+img {
+  width: 125px;
+  height: 150px; }
+
+#form {
+  display: none;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%); }
+
+#form-elements {
+  position: fixed;
+  top: 25%;
+  text-align: center;
+  width: 100%;
+  height: 100%; }
+
+#heading {
+  position: fixed;
+  top: 0%;
+  background-color: white;
+  margin-top: 0px;
+  width: 100%; }
+
+#add-book {
+  position: fixed;
+  top:7%;
+  right: 2%; }
+
+.table {
+  margin-top: 10%; }
+
+#nav {
+  position: fixed;
+  width:100%;
+  top:5.9%;
+}
