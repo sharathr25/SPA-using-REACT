@@ -1,32 +1,38 @@
 import React,{ Component} from 'react';
 
 class BookForm extends Component {
-
 constructor(){
     super();
     this.state = {
-        data: null
+        name: 'Marijn Haverbeke',
+        id: 1,
+        imgsrc: 'images/9781449328252.jpeg',
+        publisher: '',
+        published: '',
+        title:'',
+        subtitle:'',
+        isbn: 0
     }
 }
+
+handleOnChange = (event) => {
+    let value = event.target.value;
+    if(event.target.name === 'id' || event.target.name === 'isbn' || event.target.name === 'pages') {
+        value = parseInt(value,10);
+        if(event.target.name === 'id') {
+            const data = this.props.authorData.filter((data) => {
+                return data.id === value;
+            });
+            console.log(data);
+            this.setState({name: data[0].name});
+        }
+    }
+    this.setState({ [event.target.name]: value });
+}
+
 handleSubmit = (e) => {
     e.preventDefault();
-    const form = e.target;
-    console.log(form.elements);
-    const data = new FormData(e.target);
-    let bookData = {};
-    let authorData;
-    for (let name of data.keys()) {
-        bookData[name] = data.get(name);
-    }
-    bookData.pages = parseInt(bookData.pages,10);
-    bookData.id = parseInt(bookData.id,10);
-    authorData = this.props.authorData.filter((data) => {
-        return data.id === bookData.id;
-    });
-    bookData.name = authorData[0].name;
-    bookData.isbn = parseInt(bookData.isbn,10);
-    bookData.imgsrc = 'images/9781449328252.jpeg';
-    this.props.onSubmit(bookData);
+    this.props.onSubmit(this.state);
 }
 
     render() {
@@ -46,7 +52,9 @@ handleSubmit = (e) => {
                             <td>
                                 <input 
                                 type="text" id="isbn" 
-                                placeholder="Enter ISBN" name="isbn" 
+                                placeholder="Enter ISBN" 
+                                name="isbn"
+                                onChange={this.handleOnChange} 
                                 disabled={this.props.update}/>
                             </td>
                         </tr>
@@ -57,6 +65,7 @@ handleSubmit = (e) => {
                                 type="text" 
                                 id="title" 
                                 placeholder="Enter title" 
+                                onChange={this.handleOnChange}
                                 name="title" />
                             </td>
                         </tr>
@@ -66,6 +75,7 @@ handleSubmit = (e) => {
                             type="text"
                             id="subtitle" 
                             name="subtitle" 
+                            onChange={this.handleOnChange}
                             placeholder="Enter sub-title" />
                             </td>
                         </tr>
@@ -75,6 +85,7 @@ handleSubmit = (e) => {
                                 type="text" 
                                 id="description" 
                                 name="description" 
+                                onChange={this.handleOnChange}
                                 placeholder="Enter description" />
                             </td>
                         </tr>
@@ -85,6 +96,7 @@ handleSubmit = (e) => {
                                 type="text" 
                                 id="publisher" 
                                 name="publisher"
+                                onChange={this.handleOnChange}
                                 placeholder="Enter publisher" />
                             </td>
                         </tr>
@@ -95,6 +107,7 @@ handleSubmit = (e) => {
                                 type="number" 
                                 id="pages" 
                                 name="pages" 
+                                onChange={this.handleOnChange}
                                 placeholder="Enter pages" /></td>
                         </tr>
                         <tr>
@@ -103,6 +116,7 @@ handleSubmit = (e) => {
                                 type="date" 
                                 id="publishedon" 
                                 name="publishedon" 
+                                onChange={this.handleOnChange}
                                 placeholder="published-on" />
                             </td>
                         </tr>
@@ -112,7 +126,8 @@ handleSubmit = (e) => {
                                 <select 
                                     id="id" 
                                     name="id" 
-                                    disabled={this.props.update}>
+                                    disabled={this.props.update}
+                                    onChange={this.handleOnChange}>
                                     {optionJsx}
                                 </select>
                             </td>

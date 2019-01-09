@@ -2,15 +2,27 @@ import React,{ Component} from 'react';
 
 class AuthorForm extends Component {
 
+    constructor(){
+        super();
+        this.state = {
+            id:1,
+            name:'',
+            place:'',
+            about:''
+        }
+    }
+    handleOnChange = (event) => {
+        let value = event.target.value;
+        if(event.target.name === 'id') {
+            value = parseInt(value,10);
+        }
+        this.setState({ [event.target.name]: value });
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
-        const data = new FormData(e.target);
-        let authorData = {};
-        for (let name of data.keys()) {
-            authorData[name] = data.get(name);
-        }
-        authorData.id = parseInt(authorData.id,10);
-        this.props.onSubmit(authorData);
+        console.log(this.state);
+        this.props.onSubmit(this.state);
     }
 
     render() {
@@ -29,6 +41,7 @@ class AuthorForm extends Component {
                                     id="id" 
                                     placeholder="Enter ID" 
                                     name="id" 
+                                    onChange={this.handleOnChange}
                                     disabled={this.props.update}
                                 />
                             </td>
@@ -41,6 +54,7 @@ class AuthorForm extends Component {
                                     id="name"  
                                     placeholder="Enter Name" 
                                     name="name" 
+                                    onChange={this.handleOnChange}
                                 />
                             </td>
                         </tr>
@@ -52,6 +66,7 @@ class AuthorForm extends Component {
                                 id="about"  
                                 name="about" 
                                 placeholder="Enter about" 
+                                onChange={this.handleOnChange}
                                 />
                             </td>
                         </tr>
@@ -62,6 +77,7 @@ class AuthorForm extends Component {
                                 id="place"  
                                 name="place" 
                                 placeholder="Enter place" 
+                                onChange={this.handleOnChange}
                                 />
                             </td>
                         </tr>
