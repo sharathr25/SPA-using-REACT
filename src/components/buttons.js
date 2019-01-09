@@ -4,7 +4,7 @@ class Buttons extends Component {
     render() {
       const { value, classname, id } = this.props;
       return (
-        <button type="button" id={id} className={classname}>{value}</button>
+        <button onClick={this.props.onClick} type="button" id={id} className={classname}>{value}</button>
       );
     }
 }

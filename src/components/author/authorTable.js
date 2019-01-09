@@ -1,5 +1,4 @@
 import React,{ Component} from 'react';
-import TableData from './tableData';
 
 class AuthorTable extends Component {
     render() {
@@ -15,7 +14,9 @@ class AuthorTable extends Component {
             <th>Delete</th>
           </tr>
           </thead>
-          <TableData data={this.props.data}/>
+          <tbody>
+          {this.props.data}
+          </tbody>
         </table>
       );
     }

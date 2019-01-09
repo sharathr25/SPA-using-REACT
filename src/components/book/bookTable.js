@@ -1,5 +1,4 @@
 import React,{ Component} from 'react';
-import TableData from './tableData';
 
 class BookTable extends Component {
     render() {
@@ -7,7 +6,6 @@ class BookTable extends Component {
         <table className="table">
         <thead>
           <tr>
-          <th>SL No</th>
           <th>Image</th>
           <th>ISBN</th>
           <th>Title</th>
@@ -16,7 +14,9 @@ class BookTable extends Component {
           <th>Delete</th>
         </tr>
         </thead>
-          <TableData data={this.props.data}/>
+        <tbody>
+          {this.props.data}
+        </tbody>
         </table>
       );
     }
