@@ -3,7 +3,6 @@ import '../css/App.css';
 import NavBar from './navBar';
 
 function HeadingNavBar(props) {
-  console.log(props);
   const heading = props.heading || 'WEBBOOK';
     return (
       <React.Fragment>

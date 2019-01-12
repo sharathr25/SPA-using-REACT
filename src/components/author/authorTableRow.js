@@ -1,11 +1,13 @@
 import React,{ Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import { deleteAuthor, showUpdateForm} from '../../actions/authors/author_form_status';
 
-class TableRow extends Component {
+class AuthorTableRow extends Component {
     constructor() {
         super();
         this.state = {
-            href: null,
-            data: null,
+            data: null
         }
       }
 
@@ -14,11 +16,11 @@ componentWillMount() {
 }
 
 handleEditClick = () => {
-    this.props.onEditClick(this.state.data);
+    this.props.showUpdateForm(this.state.data);
 }
 
 handleDeleteClick = () => {
-    this.props.onDelteClick(this.state.data.id);
+    this.props.deleteAuthor(this.state.data.id);
 }
 
 render() {
@@ -35,4 +37,12 @@ render() {
     }
 }
 
-export default TableRow;
+function mapStateToProps(){
+    return {};
+}
+
+function matchDispachToProps(dispach) {
+    return bindActionCreators({deleteAuthor: deleteAuthor,showUpdateForm:showUpdateForm},dispach);
+}
+
+export default connect(mapStateToProps,matchDispachToProps)(AuthorTableRow);

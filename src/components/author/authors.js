@@ -3,21 +3,22 @@ import AuthorTable from './authorTable';
 import AuthorTableRow from './authorTableRow';
 import HeadingNavBar from '../heading.js';
 import Buttons from '../buttons';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {showAuthorForm,showAuthors} from '../../actions/authors/author_form_status';
 
 class Authors extends Component {
-  constructor(props) {
-    super(props);
+
+  constructor(){
+    super();
     this.state = {
-      authorData: this.props.authors,
+      authors: null
     }
   }
-
-render() {
-    let dbDataJsx=<tr></tr>;
-    if(this.state.authorData !== null){
-        let key;
-        const dbData = this.state.authorData;
-        dbDataJsx = dbData.map((data) => {
+  getDbDataJsx(){
+    let key;
+    const dbData = this.props.authorsFromStore.authors;
+    const dbDataJsx = dbData.map((data) => {
         key = data.id;
         return <AuthorTableRow 
                 onEditClick={this.props.onEditClick}
@@ -26,15 +27,30 @@ render() {
                 key={key}
               />
         });
-    }
+    return dbDataJsx;
+  }
+
+render() {
+  console.log('render');
+    let dbDataJsx = this.getDbDataJsx();
     return (
         <React.Fragment>
             <HeadingNavBar heading="AUTHORS"/>
             <AuthorTable data={dbDataJsx}/>
-            <Buttons onClick={this.props.onClick} value="ADD AUTHOR" classname="btn btn-success" id="add" />
+            <Buttons onClick={()=>this.props.showAuthorForm()} value="ADD AUTHOR" classname="btn btn-success" id="add" />
         </React.Fragment>
       );
   }
 }
 
-export default Authors;
+function mapStateToProps(state) {
+  return {
+    authorsFromStore: state.authorsFromStore 
+  };
+}
+
+function matchDispachToProps(dispach) {
+  return bindActionCreators({showAuthorForm: showAuthorForm,showAuthors: showAuthors},dispach);
+}
+
+export default connect(mapStateToProps,matchDispachToProps)(Authors);

@@ -1,4 +1,7 @@
 import React,{ Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {hideAuthorForm, addAuthor, deleteAuthor, updateAuthor} from '../../actions/authors/author_form_status';
 
 class AuthorForm extends Component {
 
@@ -21,8 +24,14 @@ class AuthorForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
-        this.props.onSubmit(this.state);
+        this.props.hideAuthorForm();
+        const currentState = this.state;
+        if(this.props.update){
+            currentState.id = this.props.author.id;
+            this.props.updateAuthor(currentState);
+            window.location.reload();
+        } else
+            this.props.addAuthor(currentState);
     }
 
     render() {
@@ -93,7 +102,7 @@ class AuthorForm extends Component {
                             <td><button 
                                     id="discard" 
                                     type="button" 
-                                    onClick={this.props.onDiscard} 
+                                    onClick={() => this.props.hideAuthorForm()} 
                                     className="btn btn-warning btn-sm">
                                     DISCARD
                                 </button>
@@ -111,4 +120,16 @@ class AuthorForm extends Component {
     }   
 }
 
-export default AuthorForm;
+function mapStateToProps(state){
+     return {update:state.authorFormFormStore.update,author: state.authorFormFormStore.author};
+}
+
+function matchDispachToProps(dispach) {
+    return bindActionCreators({hideAuthorForm: hideAuthorForm,
+        addAuthor: addAuthor,
+        updateAuthor: updateAuthor,
+        deleteAuthor: deleteAuthor
+    },dispach);
+}
+
+export default connect(mapStateToProps,matchDispachToProps)(AuthorForm);

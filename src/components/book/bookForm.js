@@ -1,15 +1,20 @@
-import React,{ Component} from 'react';
+import React,{ Component } from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {hideBookForm, addBook, deleteBook, updateBook} from '../../actions/books/book_form_status';
 
 class BookForm extends Component {
-constructor(){
-    super();
+constructor(props){
+    super(props);
     this.state = {
         name: 'Marijn Haverbeke',
         id: 1,
         imgsrc: 'images/9781449328252.jpeg',
         publisher: '',
-        published: '',
+        publishedOn: '',
         title:'',
+        pages:0,
+        description:'',
         subtitle:'',
         isbn: 0
     }
@@ -23,7 +28,6 @@ handleOnChange = (event) => {
             const data = this.props.authorData.filter((data) => {
                 return data.id === value;
             });
-            console.log(data);
             this.setState({name: data[0].name});
         }
     }
@@ -32,15 +36,27 @@ handleOnChange = (event) => {
 
 handleSubmit = (e) => {
     e.preventDefault();
-    this.props.onSubmit(this.state);
+    this.props.hideBookForm();
+    const currentState = this.state;
+    if(this.props.update){
+        currentState.isbn = this.props.book.isbn;
+        this.props.updateBook(currentState);
+        window.location.reload();
+    } else {
+        this.props.addBook(currentState);
+    }
 }
 
+getOptionJsx() {
+    let optionJsx = this.props.authorData.map((data) => {
+        return <option key={data.id} value={data.id}>{data.name}</option>
+    });
+    return optionJsx;
+}
     render() {
         if(this.props.showForm)
         {
-            let optionJsx = this.props.authorData.map((data) => {
-                return <option key={data.id} value={data.id}>{data.name}</option>
-            });
+            let optionJsx = this.getOptionJsx();
             return (
                 <div className="form-popup">
                     <div className="form-elements">
@@ -111,11 +127,11 @@ handleSubmit = (e) => {
                                 placeholder="Enter pages" /></td>
                         </tr>
                         <tr>
-                            <td><label htmlFor="publishedon">PUBLISHED ON:</label></td>
+                            <td><label htmlFor="publishedOn">PUBLISHED ON:</label></td>
                             <td><input 
                                 type="date" 
-                                id="publishedon" 
-                                name="publishedon" 
+                                id="publishedOn" 
+                                name="publishedOn" 
                                 onChange={this.handleOnChange}
                                 placeholder="published-on" />
                             </td>
@@ -144,7 +160,7 @@ handleSubmit = (e) => {
                             <td><button 
                                     id="discard" 
                                     type="button" 
-                                    onClick={this.props.onDiscard} 
+                                    onClick={() => this.props.hideBookForm()} 
                                     className="btn btn-warning btn-sm">
                                     DISCARD
                                 </button>
@@ -160,4 +176,16 @@ handleSubmit = (e) => {
     }   
 }
 
-export default BookForm;
+function mapStateToProps(state){
+    return {update: state.bookFormFromStore.update, book: state.bookFormFromStore.book};
+}
+
+function matchDispachToProps(dispach) {
+    return bindActionCreators({hideBookForm: hideBookForm,
+        addBook: addBook,
+        deleteBook: deleteBook,
+        updateBook: updateBook
+    },dispach);
+}
+
+export default connect(mapStateToProps,matchDispachToProps)(BookForm);

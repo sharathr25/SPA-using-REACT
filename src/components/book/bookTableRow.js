@@ -1,4 +1,7 @@
 import React,{ Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {deleteBook, showUpdateForm} from '../../actions/books/book_form_status'
 
 class BookTableRow extends Component {
     constructor(props) {
@@ -9,11 +12,11 @@ class BookTableRow extends Component {
       }
 
 handleEditClick = () => {
-    this.props.onEditClick(this.state.data);
+    this.props.showUpdateForm(this.state.data);
 }
 
 handleDeleteClick = () => {
-    this.props.onDelteClick(this.state.data.isbn);
+    this.props.deleteBook(this.state.data.isbn);
 }
 
 render() {
@@ -32,4 +35,12 @@ render() {
     }
 }
 
-export default BookTableRow;
+function mapStateToProps(){
+    return {};
+}
+
+function matchDispachToProps(dispach) {
+    return bindActionCreators({deleteBook: deleteBook, showUpdateForm: showUpdateForm},dispach);
+}
+
+export default connect(mapStateToProps,matchDispachToProps)(BookTableRow);
