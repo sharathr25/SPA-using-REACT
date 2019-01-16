@@ -1,0 +1,14 @@
+export const SHOW_BOOKS = 'SHOW_BOOKS';
+export const ADD_BOOK = 'ADD_BOOK';
+export const DELETE_BOOK = 'DELETE_BOOK';
+export const UPDATE_BOOK = 'UPDATE_BOOK';
+export const SHOW_BOOK_FORM = 'SHOW_BOOK_FORM';
+export const HIDE_BOOK_FORM = 'HIDE_BOOK_FORM';
+export const SHOW_AUTHORS = 'SHOW_AUTHORS';
+export const ADD_AUTHOR = 'ADD_AUTHOR';
+export const DELETE_AUTHOR = 'DELETE_AUTHOR';
+export const UPDATE_AUTHOR = 'UPDATE_AUTHOR';
+export const SHOW_AUTHOR_FORM = 'SHOW_AUTHOR_FORM';
+export const HIDE_AUTHOR_FORM = 'HIDE_AUTHOR_FORM';
+export const SHOW_POP_UP_MESSAGE = 'SHOW_POP_UP_MESSAGE';
+export const HIDE_POP_UP_MESSAGE = 'HIDE_POP_UP_MESSAGE';

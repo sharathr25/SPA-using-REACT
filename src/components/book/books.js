@@ -5,19 +5,13 @@ import HeadingNavBar from '../heading.js'
 import Buttons from '../buttons';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
-import {showBookForm,showBooks} from '../../actions/books/book_form_status';
+import {showBookForm,showBooks} from '../../actions/books/books';
 
-class Books extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fetched: false
-    }
-  }
-  
+class Books extends Component {  
   getDbDataJsx(){
     let key;
-    const dbData = this.props.booksFromStore.books;
+    console.log(this.props.books);
+    const dbData = this.props.books;
     const dbDataJsx = dbData.map((data) => {
     key = data.isbn
     return <BookTableRow onEditClick={this.props.onEditClick} onDelteClick={this.props.onDelteClick} 
@@ -28,6 +22,7 @@ class Books extends Component {
   }
 
   render() {
+    console.log('rendered');
       let dbDataJsx = this.getDbDataJsx();
       return (
         <React.Fragment>
@@ -41,7 +36,8 @@ class Books extends Component {
 
 function mapStateToProps(state) {
   return {
-    booksFromStore: state.booksFromStore 
+    books: state.books,
+    update: state.update
   };
 }
 

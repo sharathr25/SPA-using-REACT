@@ -1,7 +1,8 @@
 import React,{ Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {hideAuthorForm, addAuthor, deleteAuthor, updateAuthor} from '../../actions/authors/author_form_status';
+import {hideAuthorForm, addAuthor, deleteAuthor, updateAuthor} from '../../actions/authors/authors';
+import {showPopUpMessage} from '../../actions/popup';
 
 class AuthorForm extends Component {
 
@@ -14,6 +15,15 @@ class AuthorForm extends Component {
             about:''
         }
     }
+
+    setCurrentState = () => {
+        const currentState = {};
+        currentState.id = this.props.author.id;
+        currentState.name = this.state.name || this.props.author.name;
+        currentState.place = this.state.place || this.props.author.place;
+        currentState.about = this.state.about || this.props.author.about;
+        return currentState;
+    }
     handleOnChange = (event) => {
         let value = event.target.value;
         if(event.target.name === 'id') {
@@ -22,16 +32,21 @@ class AuthorForm extends Component {
         this.setState({ [event.target.name]: value });
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
-        this.props.hideAuthorForm();
-        const currentState = this.state;
+        let currentState = this.state;
         if(this.props.update){
-            currentState.id = this.props.author.id;
-            this.props.updateAuthor(currentState);
-            window.location.reload();
-        } else
-            this.props.addAuthor(currentState);
+            currentState = this.setCurrentState();
+            const index = this.props.authors.findIndex((author) => {
+                return author.id === currentState.id;
+            });
+            await this.props.updateAuthor(currentState,index);
+            this.props.showPopUpMessage('AUTHOR UPDATED');
+        } else {
+            await this.props.addAuthor(currentState);
+            this.props.showPopUpMessage('AUTHOR INSERTED');
+        }
+        this.props.hideAuthorForm();
     }
 
     render() {
@@ -50,6 +65,7 @@ class AuthorForm extends Component {
                                     id="id" 
                                     placeholder="Enter ID" 
                                     name="id" 
+                                    defaultValue={this.props.author.id}
                                     onChange={this.handleOnChange}
                                     disabled={this.props.update}
                                 />
@@ -62,6 +78,7 @@ class AuthorForm extends Component {
                                     type="text" 
                                     id="name"  
                                     placeholder="Enter Name" 
+                                    defaultValue={this.props.author!== 'undefined'?this.props.author.name:''}
                                     name="name" 
                                     onChange={this.handleOnChange}
                                 />
@@ -74,6 +91,7 @@ class AuthorForm extends Component {
                                 type="text" 
                                 id="about"  
                                 name="about" 
+                                defaultValue={this.props.author!== 'undefined'?this.props.author.about:''}
                                 placeholder="Enter about" 
                                 onChange={this.handleOnChange}
                                 />
@@ -85,6 +103,7 @@ class AuthorForm extends Component {
                                 type="text" 
                                 id="place"  
                                 name="place" 
+                                defaultValue={this.props.author!== 'undefined'?this.props.author.place:''}
                                 placeholder="Enter place" 
                                 onChange={this.handleOnChange}
                                 />
@@ -121,14 +140,19 @@ class AuthorForm extends Component {
 }
 
 function mapStateToProps(state){
-     return {update:state.authorFormFormStore.update,author: state.authorFormFormStore.author};
+     return {
+        authors:state.authors,
+        update:state.authorFormFormStore.update,
+        author: state.authorFormFormStore.author
+    };
 }
 
 function matchDispachToProps(dispach) {
     return bindActionCreators({hideAuthorForm: hideAuthorForm,
         addAuthor: addAuthor,
         updateAuthor: updateAuthor,
-        deleteAuthor: deleteAuthor
+        deleteAuthor: deleteAuthor,
+        showPopUpMessage: showPopUpMessage
     },dispach);
 }
 

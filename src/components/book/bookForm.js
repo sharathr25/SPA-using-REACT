@@ -1,7 +1,9 @@
 import React,{ Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {hideBookForm, addBook, deleteBook, updateBook} from '../../actions/books/book_form_status';
+import {hideBookForm, addBook, deleteBook, updateBook} from '../../actions/books/books';
+import {showPopUpMessage} from '../../actions/popup';
+import {setBookUpdated} from '../../actions/updation';
 
 class BookForm extends Component {
 constructor(props){
@@ -20,31 +22,51 @@ constructor(props){
     }
 }
 
+handleOnSelect = (event) => {
+    let value = parseInt(event.target.value, 10);
+    const data = this.props.authorData.filter((data) => {
+        return data.id === value;
+    });     
+    this.setState({name: data[0].name});
+}
+
 handleOnChange = (event) => {
     let value = event.target.value;
-    if(event.target.name === 'id' || event.target.name === 'isbn' || event.target.name === 'pages') {
+    if(event.target.name === 'isbn' || event.target.name === 'pages') {
         value = parseInt(value,10);
-        if(event.target.name === 'id') {
-            const data = this.props.authorData.filter((data) => {
-                return data.id === value;
-            });
-            this.setState({name: data[0].name});
-        }
     }
     this.setState({ [event.target.name]: value });
 }
 
-handleSubmit = (e) => {
+setCurrentState(){
+    const currentState = {};
+    currentState.isbn = this.props.book.isbn;
+    currentState.title = this.state.title || this.props.book.title;
+    currentState.subtitle = this.state.subtitle || this.props.book.subtitle;
+    currentState.publisher = this.state.publisher || this.props.book.publisher;
+    currentState.pages = this.state.pages || this.props.book.pages;
+    currentState.description = this.state.description || this.props.book.description;
+    currentState.publishedOn = this.state.publishedOn || this.props.book.publishedOn;
+    currentState.imgsrc = this.state.imgsrc;
+    currentState.name = this.props.book.name;
+    return currentState;
+}
+
+handleSubmit = async (e) => {
     e.preventDefault();
-    this.props.hideBookForm();
-    const currentState = this.state;
+    let currentState = this.state;
     if(this.props.update){
-        currentState.isbn = this.props.book.isbn;
-        this.props.updateBook(currentState);
-        window.location.reload();
-    } else {
-        this.props.addBook(currentState);
+        currentState = this.setCurrentState();
+        const index = this.props.books.findIndex((book) => {
+            return book.isbn === currentState.isbn;
+        });
+        await this.props.updateBook(currentState, index);
+        this.props.showPopUpMessage('BOOK UPDATED');
+    }  else {
+        await this.props.addBook(currentState);
+        this.props.showPopUpMessage('BOOK INSERTED');
     }
+    this.props.hideBookForm();
 }
 
 getOptionJsx() {
@@ -70,6 +92,7 @@ getOptionJsx() {
                                 type="text" id="isbn" 
                                 placeholder="Enter ISBN" 
                                 name="isbn"
+                                defaultValue={this.props.book.isbn}
                                 onChange={this.handleOnChange} 
                                 disabled={this.props.update}/>
                             </td>
@@ -80,7 +103,8 @@ getOptionJsx() {
                                 <input 
                                 type="text" 
                                 id="title" 
-                                placeholder="Enter title" 
+                                placeholder="Enter title"
+                                defaultValue={this.props.book.title}
                                 onChange={this.handleOnChange}
                                 name="title" />
                             </td>
@@ -91,6 +115,7 @@ getOptionJsx() {
                             type="text"
                             id="subtitle" 
                             name="subtitle" 
+                            defaultValue={this.props.book.subtitle}
                             onChange={this.handleOnChange}
                             placeholder="Enter sub-title" />
                             </td>
@@ -101,6 +126,7 @@ getOptionJsx() {
                                 type="text" 
                                 id="description" 
                                 name="description" 
+                                defaultValue={this.props.book.description}
                                 onChange={this.handleOnChange}
                                 placeholder="Enter description" />
                             </td>
@@ -112,6 +138,7 @@ getOptionJsx() {
                                 type="text" 
                                 id="publisher" 
                                 name="publisher"
+                                defaultValue={this.props.book.publisher}
                                 onChange={this.handleOnChange}
                                 placeholder="Enter publisher" />
                             </td>
@@ -123,6 +150,7 @@ getOptionJsx() {
                                 type="number" 
                                 id="pages" 
                                 name="pages" 
+                                defaultValue={this.props.book.pages}
                                 onChange={this.handleOnChange}
                                 placeholder="Enter pages" /></td>
                         </tr>
@@ -143,7 +171,7 @@ getOptionJsx() {
                                     id="id" 
                                     name="id" 
                                     disabled={this.props.update}
-                                    onChange={this.handleOnChange}>
+                                    onChange={this.handleOnSelect}>
                                     {optionJsx}
                                 </select>
                             </td>
@@ -177,14 +205,20 @@ getOptionJsx() {
 }
 
 function mapStateToProps(state){
-    return {update: state.bookFormFromStore.update, book: state.bookFormFromStore.book};
+    return {
+        update: state.bookFormFromStore.update,
+        book: state.bookFormFromStore.book,
+        books: state.books,
+    };
 }
 
 function matchDispachToProps(dispach) {
     return bindActionCreators({hideBookForm: hideBookForm,
         addBook: addBook,
         deleteBook: deleteBook,
-        updateBook: updateBook
+        updateBook: updateBook,
+        showPopUpMessage: showPopUpMessage,
+        setBookUpdated: setBookUpdated
     },dispach);
 }
 

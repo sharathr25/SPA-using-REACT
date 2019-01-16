@@ -1,7 +1,8 @@
 import React,{ Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {deleteBook, showUpdateForm} from '../../actions/books/book_form_status'
+import {deleteBook, showUpdateForm} from '../../actions/books/books'
+import {showPopUpMessage} from '../../actions/popup';
 
 class BookTableRow extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ handleEditClick = () => {
 
 handleDeleteClick = () => {
     this.props.deleteBook(this.state.data.isbn);
+    this.props.showPopUpMessage('BOOK DELETED');
 }
 
 render() {
@@ -35,12 +37,16 @@ render() {
     }
 }
 
-function mapStateToProps(){
+function mapStateToProps(state){
     return {};
 }
 
 function matchDispachToProps(dispach) {
-    return bindActionCreators({deleteBook: deleteBook, showUpdateForm: showUpdateForm},dispach);
+    return bindActionCreators({
+        deleteBook: deleteBook, 
+        showUpdateForm: showUpdateForm,
+        showPopUpMessage: showPopUpMessage
+    },dispach);
 }
 
 export default connect(mapStateToProps,matchDispachToProps)(BookTableRow);

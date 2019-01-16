@@ -1,7 +1,8 @@
 import React,{ Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import { deleteAuthor, showUpdateForm} from '../../actions/authors/author_form_status';
+import { deleteAuthor, showUpdateForm} from '../../actions/authors/authors';
+import {showPopUpMessage} from '../../actions/popup';
 
 class AuthorTableRow extends Component {
     constructor() {
@@ -21,6 +22,7 @@ handleEditClick = () => {
 
 handleDeleteClick = () => {
     this.props.deleteAuthor(this.state.data.id);
+    this.props.showPopUpMessage('AUTHOR DELETED');
 }
 
 render() {
@@ -42,7 +44,11 @@ function mapStateToProps(){
 }
 
 function matchDispachToProps(dispach) {
-    return bindActionCreators({deleteAuthor: deleteAuthor,showUpdateForm:showUpdateForm},dispach);
+    return bindActionCreators({
+        deleteAuthor: deleteAuthor,
+        showUpdateForm:showUpdateForm,
+        showPopUpMessage: showPopUpMessage
+    },dispach);
 }
 
 export default connect(mapStateToProps,matchDispachToProps)(AuthorTableRow);

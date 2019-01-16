@@ -5,10 +5,11 @@ import Books from './book/books';
 import Authors from './author/authors';
 import BookForm from './book/bookForm';
 import AuthorForm from './author/authorForm';
+import PopUpMessage from './success_msg_popup';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
-import {showBooks} from '../actions/books/book_form_status';
-import {showAuthors} from '../actions/authors/author_form_status';
+import {showBooks} from '../actions/books/books';
+import {showAuthors} from '../actions/authors/authors';
 
 class App extends Component {
 
@@ -42,6 +43,7 @@ render() {
         showForm={this.props.authorFormFormStore.showForm} 
         update={this.props.authorFormFormStore.update}
       />
+      <PopUpMessage />
       </React.Fragment>
     );
   }
@@ -51,7 +53,7 @@ function mapStateToProps(state) {
   return {
     bookFormFromStore: state.bookFormFromStore,
     authorFormFormStore: state.authorFormFormStore,
-    authors: state.authorsFromStore.authors
+    authors: state.authors
   };
 }
 

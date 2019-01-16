@@ -5,7 +5,7 @@ import HeadingNavBar from '../heading.js';
 import Buttons from '../buttons';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {showAuthorForm,showAuthors} from '../../actions/authors/author_form_status';
+import {showAuthorForm,showAuthors} from '../../actions/authors/authors';
 
 class Authors extends Component {
 
@@ -17,7 +17,7 @@ class Authors extends Component {
   }
   getDbDataJsx(){
     let key;
-    const dbData = this.props.authorsFromStore.authors;
+    const dbData = this.props.authors;
     const dbDataJsx = dbData.map((data) => {
         key = data.id;
         return <AuthorTableRow 
@@ -45,7 +45,7 @@ render() {
 
 function mapStateToProps(state) {
   return {
-    authorsFromStore: state.authorsFromStore 
+    authors: state.authors 
   };
 }
 

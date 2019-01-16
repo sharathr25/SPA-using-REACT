@@ -1,14 +1,18 @@
 import {combineReducers} from 'redux';
-import Books from './reducer-books';
-import Authors from './reducer-authors';
-import BookForm from './reducer-book-form';
-import AuthorForm from './reducer-author-form';
+import Books from './books/reducer-books';
+import Authors from './authors/reducer-authors';
+import BookForm from './books/reducer-book-form';
+import AuthorForm from './authors/reducer-author-form';
+import PopUpMessage from './reducer_popup_message';
+import Update from './reducer-updation';
 
 const allReducers = combineReducers({
-    booksFromStore: Books,
-    authorsFromStore: Authors,
+    books: Books,
+    authors: Authors,
     bookFormFromStore: BookForm,
-    authorFormFormStore: AuthorForm
+    authorFormFormStore: AuthorForm,
+    popUpMessage: PopUpMessage,
+    update: Update
 });
 
 export default allReducers;
