@@ -3,7 +3,6 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {hideBookForm, addBook, deleteBook, updateBook} from '../../actions/books/books';
 import {showPopUpMessage} from '../../actions/popup';
-import {setBookUpdated} from '../../actions/updation';
 
 class BookForm extends Component {
 constructor(props){
@@ -218,7 +217,6 @@ function matchDispachToProps(dispach) {
         deleteBook: deleteBook,
         updateBook: updateBook,
         showPopUpMessage: showPopUpMessage,
-        setBookUpdated: setBookUpdated
     },dispach);
 }
 
